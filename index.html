@@ -766,7 +766,7 @@
             <h2>Start Saving Food Today</h2>
             <p>Access all FoodSaver features right here in your browser. No downloads required - start managing your food inventory now!</p>
             <div class="web-actions">
-                <a href="dashboard.html" class="web-button">
+                <a href="login.html" class="web-button">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Open Dashboard</span>
                 </a>
@@ -990,8 +990,8 @@
             button.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 
-                // Dashboard button goes to dashboard.html
-                if (href === 'dashboard.html') {
+                // Dashboard button goes to login.html
+                if (href === 'login.html') {
                     // Let it navigate normally
                     return;
                 } else if (href === '#inventory') {
