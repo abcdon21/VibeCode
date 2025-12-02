@@ -765,6 +765,123 @@
             transform: translateY(-3px) translateZ(10px);
         }
         
+        /* Upload Options Styles */
+        .upload-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .upload-option-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
+            box-shadow: var(--shadow);
+        }
+        
+        .upload-option-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .upload-option-btn i {
+            font-size: 32px;
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+        
+        .upload-option-btn:hover i {
+            color: white;
+        }
+        
+        .upload-option-btn span {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .upload-option-btn small {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        /* AI Analysis Results Styles */
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .confidence-score {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .food-info h3 {
+            margin-bottom: 5px;
+        }
+        
+        .urgency-indicator {
+            margin-top: 10px;
+        }
+        
+        .urgency-indicator .score {
+            background: var(--warning);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        
+        .analysis-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .detail-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .detail-card h4 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .recommendation-card {
+            border-left-color: var(--success);
+            background: var(--pale-green);
+        }
+        
+        .detail-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .detail-card li {
+            margin-bottom: 5px;
+        }
+        
         .upload-icon {
             font-size: 48px;
             color: var(--primary);
@@ -1241,6 +1358,21 @@
             backdrop-filter: blur(10px);
         }
         
+        /* Hide dashboard content by default, show only after login */
+        .dashboard-content {
+            display: none;
+        }
+        
+        .dashboard-content.show {
+            display: block;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        /* Show login section by default, hide after successful login */
+        .login-section.hide {
+            display: none;
+        }
+        
         .login-container {
             max-width: 400px;
             margin: 0 auto;
@@ -1464,6 +1596,8 @@
             </div>
         </section>
         
+        <!-- Dashboard Content - Hidden by default, shown after login -->
+        <div class="dashboard-content" id="dashboard-content">
         <section class="hero">
             <h1>Reduce Food Waste, Save Money & Planet</h1>
             <p>FoodSaver helps you track your food inventory, reduce waste, and manage your kitchen effectively with smart notifications and meal planning.</p>
@@ -1717,15 +1851,30 @@
         
         <div class="ai-upload-section">
             <h2 class="upload-title">AI Food Recognition</h2>
-            <p>Upload a photo of your food item and our AI will identify it automatically</p>
+            <p>Analyze your food with our advanced AI system - get expiry predictions, nutritional info, and storage recommendations</p>
             
-            <div class="upload-area" id="upload-area">
+            <!-- Upload Options -->
+            <div class="upload-options">
+                <button class="upload-option-btn" id="camera-btn">
+                    <i class="fas fa-camera"></i>
+                    <span>Take Photo</span>
+                    <small>Use your camera</small>
+                </button>
+                <button class="upload-option-btn" id="gallery-btn">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Upload Image</span>
+                    <small>From gallery/folders</small>
+                </button>
+            </div>
+            
+            <div class="upload-area" id="upload-area" style="display: none;">
                 <div class="upload-icon">
                     <i class="fas fa-cloud-upload-alt"></i>
                 </div>
                 <div class="upload-text">Drag & Drop or Click to Upload</div>
                 <div class="upload-subtext">Supports JPG, PNG, WEBP (Max 5MB)</div>
                 <input type="file" id="file-input" accept="image/*" style="display: none;">
+                <input type="file" id="camera-input" accept="image/*" capture="camera" style="display: none;">
             </div>
             
             <div class="ai-processing" id="ai-processing">
@@ -1733,50 +1882,53 @@
             </div>
             
             <div class="ai-result" id="ai-result">
-                <div class="food-identified">
-                    <div class="food-icon">
-                        <i class="fas fa-apple-alt"></i>
-                    </div>
-                    <div>
-                        <h3>Food Identified: <span id="identified-food">Apple</span></h3>
-                        <p>Confidence: 92%</p>
+                <div class="analysis-header">
+                    <h3>🎯 AI Analysis Complete</h3>
+                    <div class="confidence-score">
+                        <span>Confidence: </span>
+                        <strong id="confidence-score">92%</strong>
                     </div>
                 </div>
                 
-                <div class="food-details-form">
-                    <div class="form-group">
-                        <label for="food-name">Food Name</label>
-                        <input type="text" id="food-name" class="form-control" value="Apple">
+                <div class="food-identified">
+                    <div class="food-icon">
+                        <i class="fas fa-apple-alt" id="food-icon"></i>
                     </div>
-                    <div class="form-group">
-                        <label for="food-category">Category</label>
-                        <select id="food-category" class="form-control">
-                            <option>Fruits</option>
-                            <option>Vegetables</option>
-                            <option>Dairy</option>
-                            <option>Meat</option>
-                            <option>Grains</option>
-                            <option>Other</option>
-                        </select>
+                    <div class="food-info">
+                        <h3>Food: <span id="identified-food">Apple</span></h3>
+                        <p>Category: <span id="food-category-result">Fruits</span></p>
+                        <div class="urgency-indicator">
+                            <span>Urgency Score: </span>
+                            <span id="urgency-score" class="score">3.2/10</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="expiry-date">Expiry Date</label>
-                        <input type="date" id="expiry-date" class="form-control">
+                </div>
+                
+                <div class="analysis-details">
+                    <div class="detail-card">
+                        <h4>📅 Expiry Information</h4>
+                        <p><strong>Predicted Expiry:</strong> <span id="predicted-expiry">2025-12-07</span></p>
+                        <p id="mfg-info" style="display: none;"><strong>Mfg Date:</strong> <span id="mfg-date"></span></p>
+                        <p><strong>Shelf Life:</strong> <span id="shelf-life">7 days</span></p>
                     </div>
-                    <div class="form-group">
-                        <label for="storage-location">Storage Location</label>
-                        <select id="storage-location" class="form-control">
-                            <option>Fridge</option>
-                            <option>Freezer</option>
-                            <option>Pantry</option>
-                            <option>Counter</option>
-                        </select>
+                    
+                    <div class="detail-card">
+                        <h4>⚠️ Spoilage Signs to Watch</h4>
+                        <ul id="spoilage-signs">
+                            <li>Dark spots on surface</li>
+                            <li>Soft or mushy texture</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card recommendation-card">
+                        <h4>💡 AI Recommendation</h4>
+                        <p id="ai-recommendation">✅ Fresh - can store for several days</p>
                     </div>
                 </div>
                 
                 <div class="form-actions">
-                    <button class="btn btn-secondary" id="cancel-ai">Cancel</button>
-                    <button class="btn btn-primary" id="save-ai">Save to Pantry</button>
+                    <button class="btn btn-secondary" id="analyze-another">Analyze Another</button>
+                    <button class="btn btn-primary" id="save-ai">Add to Pantry</button>
                 </div>
             </div>
         </div>
@@ -1814,6 +1966,7 @@
             </div>
         </div>
     </div>
+    </div> <!-- End dashboard-content -->
     
     <footer>
         <div class="footer-content">
@@ -2123,18 +2276,84 @@
             donationImagePreview.innerHTML = '<i class="fas fa-camera"></i><span>No image selected</span>';
         });
         
+        // Login form functionality
+        const loginForm = document.getElementById('loginForm');
+        const loginSection = document.getElementById('login-section');
+        const dashboardContent = document.getElementById('dashboard-content');
+        
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent default form submission for demo
+            
+            // Get form values
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (email && password) {
+                // Hide login section and show dashboard
+                loginSection.classList.add('hide');
+                dashboardContent.classList.add('show');
+                
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success';
+                alertDiv.textContent = `Welcome back! You've successfully logged in.`;
+                dashboardContent.insertBefore(alertDiv, dashboardContent.firstChild);
+                
+                // Remove the alert after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 3000);
+            } else {
+                // Show error message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-error';
+                alertDiv.textContent = 'Please enter both email and password.';
+                loginForm.insertBefore(alertDiv, loginForm.firstChild);
+                
+                // Remove the alert after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 3000);
+            }
+        });
+        
         // Profile dropdown functionality
         const profileDropdown = document.getElementById('profile-dropdown');
         const profileBtn = document.getElementById('profile-btn');
         
-        profileBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('active');
+        if (profileBtn) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('active');
+            });
+        }
+        
+        // Logout functionality
+        const logoutLinks = document.querySelectorAll('a[href="#"]');
+        logoutLinks.forEach(link => {
+            if (link.textContent.trim() === 'Logout') {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Show login section and hide dashboard
+                    loginSection.classList.remove('hide');
+                    dashboardContent.classList.remove('show');
+                    // Clear form fields
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                });
+            }
         });
         
         // Close dropdown when clicking outside
         document.addEventListener('click', () => {
-            profileDropdown.classList.remove('active');
+            if (profileDropdown) {
+                profileDropdown.classList.remove('active');
+            }
         });
         
         // Donate buttons on food items
@@ -2147,251 +2366,195 @@
             });
         });
         
-        // AI Upload functionality
+        // AI Food Recognition System
+        const cameraBtn = document.getElementById('camera-btn');
+        const galleryBtn = document.getElementById('gallery-btn');
         const uploadArea = document.getElementById('upload-area');
         const fileInput = document.getElementById('file-input');
+        const cameraInput = document.getElementById('camera-input');
         const aiProcessing = document.getElementById('ai-processing');
         const aiResult = document.getElementById('ai-result');
-        const cancelAi = document.getElementById('cancel-ai');
-        const saveAi = document.getElementById('save-ai');
+        const analyzeAnother = document.getElementById('analyze-another');
         
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
-        });
+        // Camera button click
+        if (cameraBtn) {
+            cameraBtn.addEventListener('click', () => {
+                cameraInput.click();
+            });
+        }
         
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.borderColor = 'var(--primary)';
-            uploadArea.style.background = 'var(--primary-light)';
-        });
+        // Gallery button click
+        if (galleryBtn) {
+            galleryBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+        }
         
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.borderColor = '#ddd';
-            uploadArea.style.background = 'white';
-        });
+        // File input handlers
+        if (fileInput) {
+            fileInput.addEventListener('change', handleFileUpload);
+        }
+        if (cameraInput) {
+            cameraInput.addEventListener('change', handleFileUpload);
+        }
         
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.borderColor = '#ddd';
-            uploadArea.style.background = 'white';
-            
-            if (e.dataTransfer.files.length) {
-                processFile(e.dataTransfer.files[0]);
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                processImage(file);
             }
-        });
+        }
         
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length) {
-                processFile(fileInput.files[0]);
-            }
-        });
-        
-        function processFile(file) {
-            // Show processing animation
-            aiProcessing.classList.add('active');
+        function processImage(file) {
+            // Show processing
+            if (aiProcessing) aiProcessing.classList.add('active');
+            if (aiResult) aiResult.classList.remove('active');
+            if (uploadArea) uploadArea.style.display = 'none';
             
-            // Simulate AI processing
-            setTimeout(() => {
-                aiProcessing.classList.remove('active');
-                aiResult.classList.add('active');
+            // Convert to base64 for analysis
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
                 
-                // In a real app, you would use actual AI to identify the food
-                // For demo purposes, we'll use a random food item
-                const foods = ['Apple', 'Banana', 'Carrot', 'Milk', 'Eggs', 'Bread', 'Tomato', 'Potato'];
-                const randomFood = foods[Math.floor(Math.random() * foods.length)];
-                document.getElementById('identified-food').textContent = randomFood;
-                document.getElementById('food-name').value = randomFood;
-                
-                // Set a default expiry date (7 days from now)
-                const nextWeek = new Date();
-                nextWeek.setDate(nextWeek.getDate() + 7);
-                document.getElementById('expiry-date').valueAsDate = nextWeek;
-            }, 2000);
+                // Simulate processing delay
+                setTimeout(() => {
+                    analyzeImage(imageData);
+                }, 2000);
+            };
+            reader.readAsDataURL(file);
         }
         
-        cancelAi.addEventListener('click', () => {
-            aiResult.classList.remove('active');
-            fileInput.value = '';
-        });
-        
-        saveAi.addEventListener('click', () => {
-            alert('Food item saved to your pantry!');
-            aiResult.classList.remove('active');
-            fileInput.value = '';
-        });
-        
-        // Set minimum date for expiry inputs to today
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('item-expiry').min = today;
-        document.getElementById('expiry-date').min = today;
-        document.getElementById('donation-time').min = new Date().toISOString().slice(0, 16);
-        
-        // Add some interactive 3D effects to cards on scroll
-        document.addEventListener('scroll', () => {
-            const cards = document.querySelectorAll('.stat-card, .food-item, .recipe-card, .impact-card, .step-card');
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    const distanceFromCenter = Math.abs(rect.top + rect.height/2 - window.innerHeight/2);
-                    const rotation = (distanceFromCenter / window.innerHeight) * 2;
-                    card.style.transform = `translateY(-${rotation}px) translateZ(${rotation*2}px)`;
+        function analyzeImage(imageData) {
+            // Send to Flask backend for analysis
+            fetch('/analyze_food', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image: imageData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayAnalysisResult(data.result);
+                } else {
+                    alert('Analysis failed: ' + data.error);
                 }
-            });
-        });
-        
-        // Explore features button
-        document.getElementById('explore-features').addEventListener('click', () => {
-            document.querySelector('.dashboard').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // NGO Partner modal functionality
-        const partnerBtn = document.getElementById('partner-btn');
-        const partnerModal = document.getElementById('partner-modal');
-        const closePartnerModal = document.getElementById('close-partner-modal');
-        const partnerForm = document.getElementById('partner-form');
-        const cancelPartner = document.getElementById('cancel-partner');
-
-        if (partnerBtn && partnerModal && partnerForm && closePartnerModal && cancelPartner) {
-            partnerBtn.addEventListener('click', () => {
-                partnerModal.classList.add('active');
-            });
-
-            closePartnerModal.addEventListener('click', () => {
-                partnerModal.classList.remove('active');
-            });
-
-            cancelPartner.addEventListener('click', () => {
-                partnerModal.classList.remove('active');
-            });
-
-            // clicking outside content closes
-            partnerModal.addEventListener('click', (e) => {
-                if (e.target === partnerModal) {
-                    partnerModal.classList.remove('active');
-                }
-            });
-
-            // ESC closes
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && partnerModal.classList.contains('active')) {
-                    partnerModal.classList.remove('active');
-                }
-            });
-
-            partnerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                // Basic client-side validation
-                const ngoName = document.getElementById('ngo-name').value.trim();
-                const ngoEmail = document.getElementById('ngo-email').value.trim();
-
-                if (!ngoName) {
-                    alert('Please enter the NGO name.');
-                    document.getElementById('ngo-name').focus();
-                    return;
-                }
-
-                if (!ngoEmail) {
-                    alert('Please enter a contact email.');
-                    document.getElementById('ngo-email').focus();
-                    return;
-                }
-
-                // Collect data
-                const formData = {
-                    name: ngoName,
-                    contact: document.getElementById('contact-person').value.trim(),
-                    email: ngoEmail,
-                    phone: document.getElementById('ngo-phone').value.trim(),
-                    address: document.getElementById('ngo-address').value.trim(),
-                    coverage: document.getElementById('coverage-areas').value.trim(),
-                    volunteers: document.getElementById('volunteers').value,
-                    website: document.getElementById('ngo-website').value.trim(),
-                    notes: document.getElementById('ngo-notes').value.trim(),
-                };
-
-                // In a real app, submit via fetch/AJAX to backend. For demo, just show success and log.
-                console.log('NGO partnership request submitted:', formData);
-                alert('Thank you! Your partnership request has been submitted. We will contact you at the email provided.');
-                partnerModal.classList.remove('active');
-                partnerForm.reset();
+                if (aiProcessing) aiProcessing.classList.remove('active');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Analysis failed. Please try again.');
+                if (aiProcessing) aiProcessing.classList.remove('active');
             });
         }
-
-        // Demo video modal functionality
-        const watchDemoBtn = document.getElementById('watch-demo-btn');
-        const demoModal = document.getElementById('demo-modal');
-        const demoVideo = document.getElementById('demo-video');
-        const closeDemoModal = document.getElementById('close-demo-modal');
-
-        if (watchDemoBtn && demoModal && demoVideo && closeDemoModal) {
-            watchDemoBtn.addEventListener('click', () => {
-                // set iframe src from data-src to start playback
-                if (!demoVideo.src) demoVideo.src = demoVideo.dataset.src;
-                demoModal.classList.add('active');
+        
+        function displayAnalysisResult(result) {
+            // Update UI with analysis results
+            const elements = {
+                'identified-food': result.food_name,
+                'food-category-result': result.category,
+                'confidence-score': result.confidence + '%',
+                'predicted-expiry': result.predicted_expiry,
+                'shelf-life': result.shelf_life_days + ' days',
+                'urgency-score': result.urgency_score + '/10',
+                'ai-recommendation': result.recommendation
+            };
+            
+            Object.keys(elements).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = elements[id];
             });
-
-            closeDemoModal.addEventListener('click', () => {
-                demoModal.classList.remove('active');
-                // stop playback by removing src
-                demoVideo.src = '';
-            });
-
-            // close when clicking outside content
-            demoModal.addEventListener('click', (e) => {
-                if (e.target === demoModal) {
-                    demoModal.classList.remove('active');
-                    demoVideo.src = '';
+            
+            // Update spoilage signs
+            const spoilageList = document.getElementById('spoilage-signs');
+            if (spoilageList) {
+                spoilageList.innerHTML = '';
+                result.spoilage_signs.forEach(sign => {
+                    const li = document.createElement('li');
+                    li.textContent = sign;
+                    spoilageList.appendChild(li);
+                });
+            }
+            
+            // Show/hide manufacturing date if available
+            const mfgInfo = document.getElementById('mfg-info');
+            const mfgDate = document.getElementById('mfg-date');
+            if (result.mfg_date && mfgInfo && mfgDate) {
+                mfgDate.textContent = result.mfg_date;
+                mfgInfo.style.display = 'block';
+            } else if (mfgInfo) {
+                mfgInfo.style.display = 'none';
+            }
+            
+            // Update urgency score color
+            const urgencyElement = document.getElementById('urgency-score');
+            if (urgencyElement) {
+                if (result.urgency_score >= 8) {
+                    urgencyElement.style.background = 'var(--danger)';
+                } else if (result.urgency_score >= 6) {
+                    urgencyElement.style.background = 'var(--warning)';
+                } else {
+                    urgencyElement.style.background = 'var(--success)';
                 }
-            });
-
-            // close on ESC
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && demoModal.classList.contains('active')) {
-                    demoModal.classList.remove('active');
-                    demoVideo.src = '';
-                }
+            }
+            
+            // Show results
+            if (aiResult) aiResult.classList.add('active');
+        }
+        
+        // Analyze another button
+        if (analyzeAnother) {
+            analyzeAnother.addEventListener('click', () => {
+                if (aiResult) aiResult.classList.remove('active');
+                if (uploadArea) uploadArea.style.display = 'block';
+                if (fileInput) fileInput.value = '';
+                if (cameraInput) cameraInput.value = '';
             });
         }
-
-        // Ripple + demo-toast for non-functional stat/recipe cards
-        const demoToast = document.createElement('div');
-        demoToast.id = 'demo-toast';
-        demoToast.textContent = 'Demo only — this control is not functional yet.';
-        document.body.appendChild(demoToast);
-
-        function showDemoToast() {
-            demoToast.classList.add('show');
-            clearTimeout(demoToast._hideTimer);
-            demoToast._hideTimer = setTimeout(() => demoToast.classList.remove('show'), 2500);
+        
+        // Save to pantry button
+        const saveAiBtn = document.getElementById('save-ai');
+        if (saveAiBtn) {
+            saveAiBtn.addEventListener('click', () => {
+                alert('Food item added to your pantry! 🎉');
+                if (aiResult) aiResult.classList.remove('active');
+                if (uploadArea) uploadArea.style.display = 'block';
+                if (fileInput) fileInput.value = '';
+                if (cameraInput) cameraInput.value = '';
+            });
+        }
+        
+        // Load expiry predictions on dashboard load
+        setTimeout(loadExpiryPredictions, 3000);
+        
+        function loadExpiryPredictions() {
+            fetch('/get_expiry_predictions')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.predictions.length > 0) {
+                    // Update stats with urgent items
+                    const urgentItems = data.predictions.filter(item => item.urgency_score >= 6);
+                    const expiringCount = document.querySelector('.stat-2 .stat-info h3');
+                    if (expiringCount) {
+                        expiringCount.textContent = urgentItems.length;
+                    }
+                    
+                    // Show alert for high-priority items
+                    const criticalItems = data.predictions.filter(item => item.urgency_score >= 8);
+                    if (criticalItems.length > 0) {
+                        setTimeout(() => {
+                            alert(`⚠️ Urgent: ${criticalItems.length} item(s) need immediate attention!`);
+                        }, 5000);
+                    }
+                }
+            })
+            .catch(error => console.error('Error loading predictions:', error));
         }
 
-        // Attach to stat cards and recipe cards to give visual feedback
-        const interactiveCards = document.querySelectorAll('.stat-card, .recipe-card');
-        interactiveCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                // create ripple at click position
-                const rect = card.getBoundingClientRect();
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple';
-                const size = Math.max(rect.width, rect.height);
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
-                ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-                card.appendChild(ripple);
-                // remove ripple after animation
-                setTimeout(() => ripple.remove(), 650);
-
-                // show demo toast
-                showDemoToast();
-            });
-
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    card.click();
-                }
-            });
-        });
+        // ...existing code...
     </script>
 </body>
 </html>
