@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodSaver - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --secondary: #FF9800;
+            --danger: #F44336;
+            --warning: #FFC107;
+            --dark: #333;
+            --light: #f9f9f9;
+            --gray: #757575;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+        }
+        
+        .floating-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%234CAF50" d="M30,30 Q50,10 70,30 T90,50 T70,70 T50,90 T30,70 T10,50 T30,30 Z"/></svg>');
+            background-size: 200px;
+            animation: floatBackground 20s linear infinite;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            margin-top: 100px; /* Space for fixed header */
+        }
+        
+        /* Main Header Styles */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-link i {
+            font-size: 14px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .logo-3d {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.2),
+                0 6px 6px rgba(0,0,0,0.2),
+                inset 0 -2px 5px rgba(0,0,0,0.2),
+                inset 0 2px 0 rgba(255,255,255,0.5);
+            transform: rotateY(15deg) rotateX(10deg);
+            transition: transform 0.5s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .logo:hover .logo-3d {
+            transform: rotateY(25deg) rotateX(15deg) translateY(-5px);
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px) translateZ(10px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--light);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px) translateZ(10px);
+            border-color: var(--primary);
+        }
+        
+        .btn-donate {
+            background: linear-gradient(135deg, var(--secondary), #E68900);
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+            animation: pulseDonate 3s infinite;
+        }
+        
+        .btn-donate:hover {
+            transform: translateY(-3px) translateZ(10px);
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.4);
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .flash-message {
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+            animation: slideInRight 0.3s ease;
+        }
+
+        .flash-success {
+            background: var(--primary);
+            color: white;
+        }
+
+        .flash-error {
+            background: var(--danger);
+            color: white;
+        }
+
+        .flash-info {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.015) translateZ(10px);
+            box-shadow: 0 18px 35px rgba(0,0,0,0.16);
+            z-index: 5;
+        }
+        
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-1 .stat-icon { background: var(--primary); }
+        .stat-2 .stat-icon { background: var(--secondary); }
+        .stat-3 .stat-icon { background: var(--warning); }
+        .stat-4 .stat-icon { background: var(--danger); }
+        
+        .stat-info h3 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            animation: pulseNumber 4s ease-in-out infinite;
+        }
+        
+        .stat-info p {
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        /* Dashboard Sections */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            animation: fadeInLeft 0.8s ease 0.4s both;
+        }
+        
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .view-all:hover {
+            transform: translateX(3px);
+        }
+        
+        .food-list {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+        
+        .food-category {
+            margin-bottom: 30px;
+        }
+        
+        .food-category h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .food-category h3 i {
+            color: var(--warning);
+        }
+        
+        .food-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .food-item {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .food-item:hover {
+            transform: translateY(-3px) translateZ(10px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        .food-item.expiring {
+            border-left-color: var(--warning);
+        }
+        
+        .food-item.expired {
+            border-left-color: var(--danger);
+        }
+        
+        .food-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .food-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--dark);
+            flex: 1;
+        }
+        
+        .food-expiry {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: white;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        
+        .expiry-good { background: var(--primary); }
+        .expiry-warning { background: var(--warning); }
+        .expiry-danger { background: var(--danger); }
+        .expiry-expired { background: var(--danger); }
+        
+        .food-details {
+            font-size: 13px;
+            color: var(--gray);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 15px;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+        
+        .food-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .food-detail-item i {
+            color: var(--primary);
+            width: 12px;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: auto;
+        }
+        
+        .food-item.expiring {
+            border: 2px solid var(--warning);
+            background: linear-gradient(145deg, #fff9e6, #ffeaa7);
+        }
+        
+        .food-item.expired {
+            border: 2px solid var(--danger);
+            background: linear-gradient(145deg, #ffe6e6, #ffcccb);
+        }
+        
+        .donate-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .donate-btn:hover {
+            background: #e68900;
+            transform: translateY(-1px);
+        }
+        
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-1px);
+        }
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .donate-btn:hover {
+            background: #E68900;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 5px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            background: #dc3545;
+            transform: translateY(-2px);
+        }
+        
+        /* Recipe Section */
+        .recipe-section {
+            animation: fadeInRight 0.8s ease 0.8s both;
+        }
+        
+        .recipe-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            backdrop-filter: blur(10px);
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px) translateZ(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .recipe-image {
+            height: 150px;
+            background: linear-gradient(45deg, #FFD54F, #FFB74D);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .recipe-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1));
+        }
+        
+        .recipe-content {
+            padding: 15px;
+        }
+        
+        .recipe-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .recipe-ingredients {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .ingredient-tag {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+        }
+
+        .logout-btn i {
+            font-size: 14px;
+        }
+
+        /* Quick Actions Section */
+        .quick-actions-section {
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transform-style: preserve-3d;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(76, 175, 80, 0.2);
+        }
+
+        .action-btn i {
+            font-size: 32px;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover i {
+            transform: scale(1.1);
+            color: var(--primary-dark);
+        }
+
+        .action-btn span {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .ai-scan-btn:hover {
+            border-color: var(--secondary);
+        }
+
+        .ai-scan-btn:hover i {
+            color: var(--secondary);
+        }
+
+        .recipe-btn:hover {
+            border-color: var(--warning);
+        }
+
+        .recipe-btn:hover i {
+            color: var(--warning);
+        }
+
+        .chatbot-btn:hover {
+            border-color: #2196F3;
+        }
+
+        .chatbot-btn:hover i {
+            color: #2196F3;
+        }
+
+        /* Add Item Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: var(--light);
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .image-upload-area {
+            border: 2px dashed var(--light);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .image-upload-area.drag-over {
+            border-color: var(--primary);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: var(--gray);
+            font-size: 16px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid var(--light);
+        }
+
+        .btn-cancel {
+            background: var(--light);
+            color: var(--gray);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Food Item Images */
+        .food-image {
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .food-item {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .food-item-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-count {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .expiry-expired {
+            background: var(--danger) !important;
+            color: white !important;
+        }
+
+        .empty-state .action-btn {
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+
+        .empty-state .action-btn:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* AI Upload Section */
+        .ai-upload-section {
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .ai-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .ai-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .ai-title h3 {
+            margin: 0 0 5px 0;
+            font-size: 20px;
+            color: var(--dark);
+        }
+
+        .ai-title p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .upload-options {
+            margin: 20px 0;
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .camera-btn, .browse-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .camera-btn:hover, .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .browse-btn {
+            background: linear-gradient(135deg, var(--secondary), #E68900);
+        }
+
+        .browse-btn:hover {
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .upload-area {
+            border: 3px dashed var(--primary-light);
+            border-radius: var(--radius);
+            padding: 40px 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(76, 175, 80, 0.15);
+            transform: scale(1.02);
+        }
+
+        .upload-content i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-content p {
+            color: var(--gray);
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .upload-content span {
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .camera-area {
+            border-radius: var(--radius);
+            padding: 20px;
+            background: rgba(76, 175, 80, 0.05);
+            text-align: center;
+        }
+
+        #cameraVideo {
+            width: 100%;
+            max-width: 400px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .capture-btn, .cancel-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .capture-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .capture-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .cancel-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #d32f2f;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+
+        .analyze-btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .analyze-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Donation Assistance Card */
+        .donation-assistance {
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 1.0s both;
+        }
+
+        .donation-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .donation-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .donation-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--secondary), #E68900);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .donation-content h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .donation-content p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .donation-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .donation-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .find-centers-btn {
+            background: linear-gradient(135deg, var(--secondary), #E68900);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .find-centers-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(135deg, var(--dark) 0%, #2c3e50 100%);
+            color: white;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-light);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .footer-logo .logo-3d {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+        }
+
+        .footer-logo span {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .footer-section p {
+            line-height: 1.6;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary-light);
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #bbb;
+        }
+
+        .contact-info i {
+            color: var(--primary-light);
+            width: 16px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0% { transform: rotateY(15deg) rotateX(10deg) translateY(0); }
+            50% { transform: rotateY(15deg) rotateX(10deg) translateY(-10px); }
+            100% { transform: rotateY(15deg) rotateX(10deg) translateY(0); }
+        }
+        
+        @keyframes floatBackground {
+            0% { background-position: 0 0; }
+            100% { background-position: 200px 200px; }
+        }
+        
+        @keyframes pulseDonate {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+
+        @keyframes pulseNumber {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px) scale(1.02); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .food-items {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .nav-menu {
+                order: 3;
+                flex-basis: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .container {
+                margin-top: 120px;
+            }
+            
+            .food-items {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .food-item {
+                padding: 15px;
+                min-height: 120px;
+            }
+            
+            .food-details {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .item-actions {
+                flex-direction: column;
+                gap: 8px;
+                padding-top: 12px;
+            }
+            
+            .donate-btn,
+            .delete-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .food-item {
+                padding: 12px;
+            }
+            
+            .food-name {
+                font-size: 14px;
+            }
+            
+            .food-expiry {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-bg"></div>
+    
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="header-logo">
+                <div class="logo-3d">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="logo-text">FoodSaver</div>
+            </div>
+            <nav class="nav-menu">
+                <a href="{{ url_for('home') if url_for else '/' }}" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="{{ url_for('about') if url_for else '/about' }}" class="nav-link">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="{{ url_for('donate') if url_for else '/donate' }}" class="nav-link">
+                    <i class="fas fa-hand-holding-heart"></i> Donate
+                </a>
+                <a href="{{ url_for('profile') if url_for else '/profile' }}" class="nav-link">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="{{ url_for('contact') if url_for else '/contact' }}" class="nav-link">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+            </nav>
+            <div class="user-actions">
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Flash Messages -->
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card stat-1">
+                <div class="stat-icon">
+                    <i class="fas fa-apple-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.total_items if stats else 0 }}</h3>
+                    <p>Items in pantry</p>
+                </div>
+            </div>
+            <div class="stat-card stat-2">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.expiring_soon if stats else 0 }}</h3>
+                    <p>Expiring soon</p>
+                </div>
+            </div>
+            <div class="stat-card stat-3">
+                <div class="stat-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.available_recipes if stats else 0 }}</h3>
+                    <p>Recipes available</p>
+                </div>
+            </div>
+            <div class="stat-card stat-4">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.donations_made if stats else 0 }}</h3>
+                    <p>Donations made</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions Section -->
+        <div class="quick-actions-section">
+            <div class="action-buttons">
+                <button class="action-btn ai-scan-btn" id="aiScanBtn">
+                    <i class="fas fa-camera"></i>
+                    <span>AI Food Scanner</span>
+                </button>
+                <button class="action-btn recipe-btn" id="recipeBtn">
+                    <i class="fas fa-utensils"></i>
+                    <span>Get Recipes</span>
+                </button>
+                <button class="action-btn chatbot-btn" onclick="window.location.href='/chatbot'">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Food Assistant</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- AI Upload Section -->
+        <div class="ai-upload-section" id="aiUploadSection" style="display: none;">
+            <div class="ai-card">
+                <div class="ai-header">
+                    <div class="ai-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div class="ai-title">
+                        <h3>Smart Food Scanner</h3>
+                        <p>Scan your food and AI will automatically add everything to your pantry with details</p>
+                    </div>
+                </div>
+                <div class="upload-options">
+                    <div class="upload-buttons">
+                        <button class="camera-btn" id="cameraBtn">
+                            <i class="fas fa-camera"></i>
+                            Take Photo
+                        </button>
+                        <button class="browse-btn" id="browseBtn">
+                            <i class="fas fa-folder-open"></i>
+                            Browse Files
+                        </button>
+                    </div>
+                    <div class="upload-area" id="uploadArea" style="display: none;">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drop your image here or <span>click to browse</span></p>
+                        </div>
+                    </div>
+                    <div class="camera-area" id="cameraArea" style="display: none;">
+                        <video id="cameraVideo" autoplay playsinline></video>
+                        <canvas id="cameraCanvas" style="display: none;"></canvas>
+                        <div class="camera-controls">
+                            <button class="capture-btn" id="captureBtn">
+                                <i class="fas fa-camera"></i> Capture
+                            </button>
+                            <button class="cancel-btn" id="cancelBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+                <button class="analyze-btn" id="analyzeBtn" disabled>
+                    <i class="fas fa-magic"></i> Smart Scan & Add to Pantry
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="food-list">
+                <div class="section-title">
+                    <h2>Your Pantry</h2>
+                    {% if food_items %}
+                        <span class="item-count">{{ food_items|length }} items</span>
+                    {% endif %}
+                </div>
+                
+                {% if food_items %}
+                    <!-- Expiring Soon Section -->
+                    {% set expiring_items = food_items | selectattr('expiry_status', 'in', ['expiring', 'expired']) | list %}
+                    {% if expiring_items %}
+                    <div class="food-category">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Expiring Soon</h3>
+                        <div class="food-items">
+                            {% for item in expiring_items %}
+                            <div class="food-item {{ 'expired' if item.expiry_status == 'expired' else 'expiring' }}">
+                                {% if item.image_filename %}
+                                <div class="food-image">
+                                    <img src="/uploads/{{ item.image_filename }}" alt="{{ item.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                </div>
+                                {% endif %}
+                                <div class="food-item-header">
+                                    <div class="food-name">{{ item.name }}</div>
+                                    <div class="food-expiry {{ 'expiry-expired' if item.expiry_status == 'expired' else 'expiry-warning' }}">
+                                        {% if item.days_until_expiry is not none %}
+                                            {% if item.days_until_expiry < 0 %}
+                                                Expired {{ -item.days_until_expiry }} days ago
+                                            {% elif item.days_until_expiry == 0 %}
+                                                Expires today
+                                            {% else %}
+                                                {{ item.days_until_expiry }} day{{ 's' if item.days_until_expiry != 1 }}
+                                            {% endif %}
+                                        {% else %}
+                                            No expiry date
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="food-details">
+                                    <div class="food-detail-item">
+                                        <i class="fas fa-weight"></i>
+                                        <span>{{ item.quantity }} {{ item.unit }}</span>
+                                    </div>
+                                    <div class="food-detail-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ item.location.title() }}</span>
+                                    </div>
+                                    {% if item.notes %}
+                                    <div class="food-detail-item" style="grid-column: 1 / -1;">
+                                        <i class="fas fa-sticky-note"></i>
+                                        <span>{{ item.notes }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="item-actions">
+                                    <button class="donate-btn" data-item="{{ item.name }}">
+                                        <i class="fas fa-heart"></i> Donate
+                                    </button>
+                                    <button class="delete-btn" data-item-id="{{ item.id }}" data-item-name="{{ item.name }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- All Items by Category -->
+                    {% set categories = food_items | groupby('category') %}
+                    {% for category, items in categories %}
+                        {% if category != 'unknown' %}
+                        <div class="food-category">
+                            <h3>
+                                <i class="fas fa-{{ 'apple-alt' if category == 'fruits' else 'carrot' if category == 'vegetables' else 'cheese' if category == 'dairy' else 'drumstick-bite' if category == 'meat' else 'fish' if category == 'seafood' else 'bread-slice' if category == 'grains' else 'can-food' if category == 'canned' else 'snowflake' if category == 'frozen' else 'coffee' if category == 'beverages' else 'cookie' if category == 'snacks' else 'box' }}"></i>
+                                {{ category.title() }}
+                            </h3>
+                            <div class="food-items">
+                                {% for item in items %}
+                                    {% if item.expiry_status not in ['expiring', 'expired'] %}
+                                    <div class="food-item">
+                                        {% if item.image_filename %}
+                                        <div class="food-image">
+                                            <img src="/uploads/{{ item.image_filename }}" alt="{{ item.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                        </div>
+                                        {% endif %}
+                                        <div class="food-item-header">
+                                            <div class="food-name">{{ item.name }}</div>
+                                            <div class="food-expiry {{ 'expiry-warning' if item.expiry_status == 'warning' else 'expiry-good' }}">
+                                                {% if item.days_until_expiry is not none %}
+                                                    {{ item.days_until_expiry }} day{{ 's' if item.days_until_expiry != 1 }}
+                                                {% else %}
+                                                    No expiry date
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="food-details">
+                                            <div class="food-detail-item">
+                                                <i class="fas fa-weight"></i>
+                                                <span>{{ item.quantity }} {{ item.unit }}</span>
+                                            </div>
+                                            <div class="food-detail-item">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <span>{{ item.location.title() }}</span>
+                                            </div>
+                                            {% if item.notes %}
+                                            <div class="food-detail-item" style="grid-column: 1 / -1;">
+                                                <i class="fas fa-sticky-note"></i>
+                                                <span>{{ item.notes }}</span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="item-actions">
+                                            <button class="donate-btn" data-item="{{ item.name }}">
+                                                <i class="fas fa-heart"></i> Donate
+                                            </button>
+                                            <button class="delete-btn" data-item-id="{{ item.id }}" data-item-name="{{ item.name }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--gray);">
+                        <i class="fas fa-camera-retro" style="font-size: 64px; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <h3 style="margin-bottom: 10px; color: var(--dark);">Your pantry is empty</h3>
+                        <p style="margin-bottom: 30px;">Take a photo of your food and let AI automatically add everything to your pantry!</p>
+                        <button class="action-btn ai-scan-btn" onclick="document.getElementById('aiScanBtn').click();" style="display: inline-flex; margin: 0 auto;">
+                            <i class="fas fa-camera"></i>
+                            <span>Scan Your First Items</span>
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="recipe-section">
+                <div class="section-title">
+                    <h2>Recipe Suggestions</h2>
+                    <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+                </div>
+                
+                <div class="recipe-card">
+                    <div class="recipe-image"></div>
+                    <div class="recipe-content">
+                        <div class="recipe-title">Banana Spinach Smoothie</div>
+                        <div class="recipe-ingredients">
+                            <span class="ingredient-tag">Bananas</span>
+                            <span class="ingredient-tag">Spinach</span>
+                        </div>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-clock"></i> 5 min</span>
+                            <span><i class="fas fa-star"></i> 4.5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recipe-card">
+                    <div class="recipe-image"></div>
+                    <div class="recipe-content">
+                        <div class="recipe-title">Carrot Apple Salad</div>
+                        <div class="recipe-ingredients">
+                            <span class="ingredient-tag">Carrots</span>
+                            <span class="ingredient-tag">Apples</span>
+                        </div>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-clock"></i> 10 min</span>
+                            <span><i class="fas fa-star"></i> 4.2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donation Assistance Card -->
+        <div class="donation-assistance">
+            <div class="donation-card">
+                <div class="donation-header">
+                    <div class="donation-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="donation-content">
+                        <h3>Donation Assistant</h3>
+                        <p>Find nearby food banks and donation centers</p>
+                    </div>
+                </div>
+                <div class="donation-stats">
+                    <div class="donation-stat">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Nearby Centers</span>
+                    </div>
+                    <div class="donation-stat">
+                        <span class="stat-number">2.3km</span>
+                        <span class="stat-label">Closest</span>
+                    </div>
+                </div>
+                <button class="find-centers-btn">
+                    <i class="fas fa-map-marker-alt"></i> Find Centers
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-3d">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <span>FoodSaver</span>
+                    </div>
+                    <p>Reducing food waste, one meal at a time. Join our community in making a sustainable difference.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Add Food</a></li>
+                        <li><a href="#">Recipes</a></li>
+                        <li><a href="#">Donations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Food Safety Tips</a></li>
+                        <li><a href="#">Storage Guide</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> hello@foodsaver.com</p>
+                        <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Green St, Eco City</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FoodSaver. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Flash messages auto-hide
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        // Interactive hover effects
+        document.querySelectorAll('.stat-card, .food-item, .recipe-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.015)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Donate button functionality
+        document.querySelectorAll('.donate-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const item = this.getAttribute('data-item');
+                showNotification(`Thank you for donating ${item}! A local food bank will be notified.`, 'success');
+                this.innerHTML = '<i class="fas fa-check"></i> Donated';
+                this.style.background = '#4CAF50';
+                this.disabled = true;
+            });
+        });
+
+        // Delete button functionality
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+                const itemName = this.getAttribute('data-item-name');
+                
+                if (confirm(`Are you sure you want to delete "${itemName}" from your pantry?`)) {
+                    deleteItem(itemId, itemName);
+                }
+            });
+        });
+
+        // Delete item function
+        async function deleteItem(itemId, itemName) {
+            try {
+                const response = await fetch(`/delete_food_item/${itemId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification(`✅ Successfully deleted ${itemName}`, 'success');
+                    
+                    // Remove the item from the UI
+                    const itemElements = document.querySelectorAll(`[data-item-id="${itemId}"]`);
+                    itemElements.forEach(element => {
+                        const foodItem = element.closest('.food-item');
+                        if (foodItem) {
+                            foodItem.style.opacity = '0';
+                            foodItem.style.transform = 'scale(0.8)';
+                            setTimeout(() => {
+                                foodItem.remove();
+                                // Check if we need to refresh to update counts
+                                checkEmptyCategories();
+                            }, 300);
+                        }
+                    });
+                } else {
+                    showNotification(`❌ Failed to delete ${itemName}: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ Error deleting ${itemName}: ${error.message}`, 'error');
+            }
+        }
+
+        // Check for empty categories after deletion
+        function checkEmptyCategories() {
+            const categories = document.querySelectorAll('.food-category');
+            let hasItems = false;
+            
+            categories.forEach(category => {
+                const items = category.querySelectorAll('.food-item');
+                if (items.length === 0) {
+                    category.style.display = 'none';
+                } else {
+                    hasItems = true;
+                }
+            });
+            
+            // Show empty state if no items remain
+            if (!hasItems) {
+                setTimeout(() => {
+                    location.reload(); // Reload to show proper empty state
+                }, 1000);
+            }
+        }
+
+        // AI Upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const cameraArea = document.getElementById('cameraArea');
+        const fileInput = document.getElementById('fileInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const browseBtn = document.getElementById('browseBtn');
+        const cameraVideo = document.getElementById('cameraVideo');
+        const cameraCanvas = document.getElementById('cameraCanvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        let cameraStream = null;
+
+        // Camera button click
+        cameraBtn.addEventListener('click', async () => {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } // Use back camera on mobile
+                });
+                cameraVideo.srcObject = cameraStream;
+                cameraArea.style.display = 'block';
+                uploadArea.style.display = 'none';
+            } catch (error) {
+                alert('Camera access denied or not available');
+                console.error('Camera error:', error);
+            }
+        });
+
+        // Browse button click
+        browseBtn.addEventListener('click', () => {
+            uploadArea.style.display = 'block';
+            cameraArea.style.display = 'none';
+            stopCamera();
+        });
+
+        // Capture photo
+        captureBtn.addEventListener('click', () => {
+            const canvas = cameraCanvas;
+            const context = canvas.getContext('2d');
+            canvas.width = cameraVideo.videoWidth;
+            canvas.height = cameraVideo.videoHeight;
+            context.drawImage(cameraVideo, 0, 0);
+            
+            // Convert to blob and store for AI analysis
+            canvas.toBlob((blob) => {
+                // Store the blob for AI analysis
+                capturedImageBlob = blob;
+                
+                // Create file for display purposes
+                const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+                handleFileUpload(file, '📸 Camera capture completed - Ready for AI analysis');
+                stopCamera();
+                cameraArea.style.display = 'none';
+            }, 'image/jpeg', 0.8);
+        });
+
+        // Cancel camera
+        cancelBtn.addEventListener('click', () => {
+            stopCamera();
+            cameraArea.style.display = 'none';
+        });
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+        }
+
+        // Click to browse files
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        function handleFileUpload(file, customMessage = null) {
+            if (file.type.startsWith('image/')) {
+                // Store the file for AI analysis
+                uploadedFile = file;
+                
+                const message = customMessage || `Image uploaded: <strong>${file.name}</strong>`;
+                uploadArea.innerHTML = `
+                    <div class="upload-content">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        <p>${message}</p>
+                        <p style="font-size: 14px; margin-top: 10px; color: #666;">Ready for advanced AI analysis</p>
+                    </div>
+                `;
+                uploadArea.style.display = 'block';
+                analyzeBtn.disabled = false;
+            } else {
+                showNotification('Please select a valid image file (JPG, PNG, etc.)', 'error');
+            }
+        }
+
+        // Advanced AI Analysis with Real Backend Integration
+        analyzeBtn.addEventListener('click', async () => {
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Processing...';
+            analyzeBtn.disabled = true;
+            
+            try {
+                // Show progressive AI analysis stages
+                showNotification('🤖 Initializing advanced AI vision system...', 'info');
+                await sleep(800);
+                
+                showNotification('🔍 Performing multi-object detection and classification...', 'info');
+                await sleep(1000);
+                
+                showNotification('🧠 Analyzing freshness, quantity, and nutritional value...', 'info');
+                await sleep(1200);
+                
+                showNotification('📊 Generating comprehensive food analysis report...', 'info');
+                await sleep(1000);
+                
+                // Prepare image data for API call
+                let imageData = null;
+                
+                // Check if we have camera capture or uploaded file
+                if (capturedImageBlob) {
+                    // Use captured image from camera
+                    const formData = new FormData();
+                    formData.append('image', capturedImageBlob, 'camera-capture.jpg');
+                    imageData = formData;
+                } else if (uploadedFile) {
+                    // Use uploaded file
+                    const formData = new FormData();
+                    formData.append('image', uploadedFile);
+                    imageData = formData;
+                } else {
+                    throw new Error('No image data available for analysis');
+                }
+                
+                // Call the advanced AI API
+                const response = await fetch('/api/smart_scan', {
+                    method: 'POST',
+                    body: imageData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Display comprehensive AI results
+                    analyzeBtn.innerHTML = '<i class="fas fa-check-circle"></i> AI Analysis Complete!';
+                    
+                    showNotification(`🎉 ${result.message}`, 'success');
+                    
+                    // Show detailed results
+                    setTimeout(() => {
+                        let detailsReport = `🤖 Next-Gen AI Food Analysis Results:\n\n`;
+                        detailsReport += `📊 Overall Confidence: ${result.overall_confidence}%\n`;
+                        detailsReport += `🔍 Items Detected: ${result.items_detected}\n`;
+                        detailsReport += `📦 Added to Pantry: ${result.items_added_to_pantry}\n`;
+                        detailsReport += `🧠 AI Summary: ${result.ai_summary}\n\n`;
+                        
+                        detailsReport += `📋 Intelligent Analysis Results:\n`;
+                        result.detected_items.forEach((item, index) => {
+                            detailsReport += `${index + 1}. ${item.name} (${item.quantity})\n`;
+                            detailsReport += `   • Quality: ${item.freshness}\n`;
+                            detailsReport += `   • Expiry Status: ${item.expires_in_days} days remaining\n`;
+                            detailsReport += `   • Detection Confidence: ${item.confidence}\n`;
+                            if (item.storage_tip) {
+                                detailsReport += `   • Storage Tip: ${item.storage_tip}\n`;
+                            }
+                            detailsReport += `\n`;
+                        });
+                        
+                        if (result.ai_insights && result.ai_insights.length > 0) {
+                            detailsReport += `� Smart AI Insights:\n`;
+                            result.ai_insights.forEach(insight => {
+                                detailsReport += `• ${insight}\n`;
+                            });
+                            detailsReport += `\n`;
+                        }
+                        
+                        detailsReport += `⚡ AI-Powered Recommendations:\n`;
+                        result.recommended_actions.forEach(action => {
+                            detailsReport += `• ${action}\n`;
+                        });
+                        
+                        // Show comprehensive results with better formatting
+                        const confirmAction = confirm(detailsReport + '\n\nWould you like to view your updated pantry now?');
+                        if (confirmAction) {
+                            // Optionally redirect to refresh or show pantry section
+                            showNotification('💡 Tip: Scroll up to see your updated pantry or refresh the page for the latest view!', 'info');
+                        }
+                        
+                        // Show individual smart notifications
+                        result.detected_items.forEach((item, index) => {
+                            setTimeout(() => {
+                                let notificationType = 'success';
+                                let notificationIcon = '✨';
+                                
+                                // Smart notification based on expiry status
+                                if (item.expires_in_days <= 0) {
+                                    notificationType = 'error';
+                                    notificationIcon = '🚨';
+                                } else if (item.expires_in_days <= 2) {
+                                    notificationType = 'error';
+                                    notificationIcon = '⚠️';
+                                } else if (item.expires_in_days <= 5) {
+                                    notificationType = 'info';
+                                    notificationIcon = '🟡';
+                                }
+                                
+                                showNotification(`${notificationIcon} ${item.name} (${item.quantity}) - ${item.freshness} quality, ${item.expires_in_days > 0 ? `expires in ${item.expires_in_days} days` : 'EXPIRED - discard safely'}`, notificationType);
+                            }, (index + 1) * 1200);
+                        });
+                        
+                        // Final notification
+                        setTimeout(() => {
+                            showNotification('� Refresh the page to see your updated pantry with AI-analyzed items!', 'info');
+                        }, (result.detected_items.length + 1) * 1000);
+                        
+                    }, 1500);
+                    
+                } else {
+                    throw new Error(result.error || 'AI analysis failed');
+                }
+                
+            } catch (error) {
+                console.error('AI Analysis Error:', error);
+                analyzeBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Analysis Failed';
+                showNotification(`❌ AI Analysis Error: ${error.message}`, 'error');
+            }
+            
+            // Reset UI after completion
+            setTimeout(() => {
+                resetAIInterface();
+            }, 8000);
+        });
+        
+        // Helper function for delays
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        // Variables to store image data
+        let capturedImageBlob = null;
+        let uploadedFile = null;
+        
+        // Reset AI interface
+        function resetAIInterface() {
+            uploadArea.innerHTML = `
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drop your image here or <span>click to browse</span></p>
+                </div>
+            `;
+            uploadArea.style.display = 'none';
+            cameraArea.style.display = 'none';
+            analyzeBtn.innerHTML = '<i class="fas fa-magic"></i> Smart Scan & Add to Pantry';
+            analyzeBtn.disabled = true;
+            
+            // Clear image data
+            capturedImageBlob = null;
+            uploadedFile = null;
+            
+            // Hide the AI upload section
+            const aiSection = document.getElementById('aiUploadSection');
+            if (aiSection) {
+                aiSection.style.display = 'none';
+            }
+        }
+
+        // Find Centers button
+        document.querySelector('.find-centers-btn').addEventListener('click', () => {
+            showNotification('Opening donation centers map... Found 5 nearby locations!', 'success');
+            
+            // Simulate opening a map or new window
+            setTimeout(() => {
+                showNotification('Redirecting to donation centers near you...', 'info');
+            }, 1500);
+        });
+
+        // Enhanced notification function with smart AI feedback
+        function showNotification(message, type = 'info') {
+            const flashContainer = document.querySelector('.flash-messages');
+            if (flashContainer) {
+                const notification = document.createElement('div');
+                notification.className = `flash-message flash-${type}`;
+                notification.innerHTML = message; // Use innerHTML to support HTML formatting
+                
+                // Add animation class
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                flashContainer.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateX(0)';
+                    notification.style.transition = 'all 0.3s ease';
+                }, 10);
+                
+                // Auto-remove with smart timing
+                let autoRemoveDelay = type === 'error' ? 8000 : 6000;
+                if (message.length > 100) autoRemoveDelay += 2000;
+                
+                setTimeout(() => {
+                    if (notification && notification.parentNode) {
+                        notification.style.opacity = '0';
+                        notification.style.transform = 'translateX(100%)';
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 300);
+                    }
+                }, autoRemoveDelay);
+                
+                // Allow manual close by clicking
+                notification.addEventListener('click', () => {
+                    if (notification && notification.parentNode) {
+                        notification.style.opacity = '0';
+                        notification.style.transform = 'translateX(100%)';
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 300);
+                    }
+                });
+            }
+        }
+
+        // Quick Action Buttons
+        document.getElementById('aiScanBtn').addEventListener('click', () => {
+            const aiSection = document.getElementById('aiUploadSection');
+            aiSection.style.display = aiSection.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('recipeBtn').addEventListener('click', () => {
+            // Scroll to recipe section and highlight it
+            const recipeSection = document.querySelector('.recipe-section');
+            if (recipeSection) {
+                recipeSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Add temporary highlight effect
+                recipeSection.style.boxShadow = '0 0 20px rgba(76, 175, 80, 0.5)';
+                recipeSection.style.transform = 'scale(1.02)';
+                
+                setTimeout(() => {
+                    recipeSection.style.boxShadow = '';
+                    recipeSection.style.transform = '';
+                }, 2000);
+                
+                // Show notification
+                showNotification('Showing recipes based on your pantry items!', 'success');
+            } else {
+                showNotification('Recipe suggestions coming soon! Add some items to your pantry first.', 'info');
+            }
+        });
+
+        // Enhanced features for modern AI-powered food management
+    </script>
+
+
+</body>
+</html>

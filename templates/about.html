@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - FoodSaver</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #00b894;
+            --light-green: #55efc4;
+            --pale-green: #e8f8f5;
+            --dark-green: #00a085;
+            --white: #ffffff;
+            --off-white: #f8f9fa;
+            --text-color: #2d3436;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--pale-green) 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: var(--white);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--primary-green);
+            font-size: 28px;
+        }
+        
+        .logo h1 {
+            color: var(--primary-green);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-green);
+        }
+        
+        /* Main Content */
+        .about-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .about-section h1 {
+            font-size: 3rem;
+            color: var(--dark-green);
+            margin-bottom: 20px;
+        }
+        
+        .about-section p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-green);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--primary-green);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+        
+        .btn:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--white);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-green);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>FoodSaver</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/contact">Contact</a>
+                    <a href="/login">Login</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="about-section">
+        <div class="container">
+            <h1>About FoodSaver</h1>
+            <p>FoodSaver is a revolutionary platform designed to combat food waste and help households manage their food inventory more efficiently. Our mission is to reduce food waste, save money, and protect the environment through smart technology and practical solutions.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI-Powered Recognition</h3>
+                    <p>Our advanced AI technology can identify food items from photos, making inventory management effortless and accurate.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>Smart Notifications</h3>
+                    <p>Get timely alerts before your food expires, helping you plan meals and reduce waste effectively.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Recipe Suggestions</h3>
+                    <p>Discover delicious recipes based on ingredients you already have, turning potential waste into wonderful meals.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Food Donation</h3>
+                    <p>Connect with local NGOs to donate excess food, ensuring it reaches those who need it most.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Waste Analytics</h3>
+                    <p>Track your food waste reduction progress and see the positive impact you're making on the environment.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Environmental Impact</h3>
+                    <p>Monitor your carbon footprint reduction and contribute to a more sustainable future.</p>
+                </div>
+            </div>
+            
+            <a href="/login" class="btn">
+                <i class="fas fa-rocket"></i> Get Started Today
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/login">Login</a>
+            </div>
+            <p>&copy; 2025 FoodSaver. All rights reserved. Making the world greener, one meal at a time.</p>
+        </div>
+    </footer>
+</body>
+</html>

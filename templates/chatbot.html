@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Food Assistant - FoodSaver</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #00b894;
+            --light-green: #55efc4;
+            --dark-green: #00a085;
+            --white: #ffffff;
+            --off-white: #f8f9fa;
+            --light-gray: #e9ecef;
+            --text-color: #2d3436;
+            --text-light: #636e72;
+            --bot-bg: #e3f2fd;
+            --user-bg: #e8f5e8;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--primary-green) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            height: 80vh;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--primary-green);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            color: var(--white);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #fafafa;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .bot-message {
+            background: var(--bot-bg);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            background: var(--user-bg);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-content {
+            margin-bottom: 5px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+        }
+
+        .bot-message .message-time {
+            text-align: left;
+        }
+
+        .suggestion-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .suggestion-btn {
+            background: var(--primary-green);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-btn:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            background: var(--white);
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 25px;
+            resize: none;
+            font-family: inherit;
+            font-size: 16px;
+            max-height: 100px;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .send-btn, .image-btn {
+            padding: 15px;
+            background: var(--primary-green);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+
+        .send-btn:hover, .image-btn:hover {
+            background: var(--dark-green);
+            transform: scale(1.1);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 20px;
+            background: var(--bot-bg);
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+            max-width: 70%;
+            align-self: flex-start;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            animation: typing 1.5s infinite;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        .file-input {
+            display: none;
+        }
+
+        .learning-note {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-top: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .item-added {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 10px;
+            border-left: 4px solid #28a745;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typing {
+            0%, 20% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .chat-container {
+                height: 90vh;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .chat-header {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-robot"></i>
+                <h1>AI Food Assistant</h1>
+            </div>
+            <a href="/dashboard" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                <div class="message-content">
+                    <strong>🤖 AI Assistant:</strong> Hi {{user.name}}! I'm your intelligent food scanner. Upload a photo of any food and I'll identify it. If I make a mistake, just correct me and I'll learn! 📸
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <i class="fas fa-robot"></i>
+            <span>AI is thinking</span>
+            <div class="typing-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="input-container">
+                <textarea 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="Type a message or upload a food image..."
+                    rows="1"></textarea>
+                <input type="file" id="imageInput" class="file-input" accept="image/*">
+                <button class="image-btn" onclick="document.getElementById('imageInput').click()">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScanId = null;
+        let awaitingCorrection = false;
+
+        // Auto-resize textarea
+        document.getElementById('messageInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Send message on Enter
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Handle image upload
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                uploadImage(file);
+            }
+        });
+
+        function addMessage(content, isBot = false, showTime = true) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isBot ? 'bot-message' : 'user-message'}`;
+            
+            const time = showTime ? new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">${isBot ? '<strong>🤖 AI Assistant:</strong> ' : ''}${content}</div>
+                ${time ? `<div class="message-time">${time}</div>` : ''}
+            `;
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return messageDiv;
+        }
+
+        function addSuggestionButtons(buttons, messageDiv) {
+            const suggestionsDiv = document.createElement('div');
+            suggestionsDiv.className = 'suggestion-buttons';
+            
+            buttons.forEach(buttonText => {
+                const button = document.createElement('button');
+                button.className = 'suggestion-btn';
+                button.textContent = buttonText;
+                button.onclick = () => handleSuggestion(buttonText);
+                suggestionsDiv.appendChild(button);
+            });
+            
+            messageDiv.appendChild(suggestionsDiv);
+        }
+
+        function handleSuggestion(suggestion) {
+            // Remove all suggestion buttons
+            document.querySelectorAll('.suggestion-buttons').forEach(div => div.remove());
+            
+            // Add user message
+            addMessage(suggestion, false);
+            
+            // Handle the suggestion
+            if (suggestion === "Yes, that's correct!") {
+                handleCorrection('confirm', suggestion);
+            } else if (suggestion === "No, let me tell you what it is") {
+                awaitingCorrection = true;
+                addMessage("Please tell me what food this actually is. For example: 'It's actually a banana'", true);
+            } else if (suggestion === "Close, but not exactly right") {
+                awaitingCorrection = true;
+                addMessage("I'm close! Please tell me the exact name. For example: 'It's actually green apples, not red apples'", true);
+            }
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, false);
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Handle different types of messages
+            if (awaitingCorrection && currentScanId) {
+                handleCorrection('correct', message);
+                awaitingCorrection = false;
+            } else {
+                // Send general chat message
+                showTyping();
+                
+                fetch('/api/chat_message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    hideTyping();
+                    addMessage(data.bot_message, true);
+                })
+                .catch(error => {
+                    hideTyping();
+                    addMessage("Sorry, I had trouble processing that. Please try again! 😅", true);
+                });
+            }
+        }
+
+        function handleCorrection(type, message) {
+            if (!currentScanId) {
+                addMessage("I don't have a recent scan to correct. Please upload a new image!", true);
+                return;
+            }
+            
+            showTyping();
+            
+            fetch('/api/chat_correct', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    scan_id: currentScanId,
+                    type: type,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTyping();
+                
+                const botMessageDiv = addMessage(data.bot_message, true);
+                
+                // Add learning note if present
+                if (data.learning_note) {
+                    const learningDiv = document.createElement('div');
+                    learningDiv.className = 'learning-note';
+                    learningDiv.textContent = data.learning_note;
+                    botMessageDiv.appendChild(learningDiv);
+                }
+                
+                // Add item added confirmation
+                if (data.item_added) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item-added';
+                    itemDiv.innerHTML = `
+                        <strong>✅ Added to Pantry:</strong><br>
+                        📦 ${data.item_added.name}<br>
+                        📅 Expires in ${data.item_added.expires_in} days
+                    `;
+                    botMessageDiv.appendChild(itemDiv);
+                }
+                
+                // Handle follow-up questions
+                if (data.needs_input || data.awaiting_correction) {
+                    awaitingCorrection = true;
+                } else {
+                    currentScanId = null;
+                    awaitingCorrection = false;
+                }
+            })
+            .catch(error => {
+                hideTyping();
+                addMessage("Sorry, I had trouble processing that correction. Please try again! 😅", true);
+            });
+        }
+
+        function uploadImage(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // Show upload message
+            addMessage(`📸 Uploaded image: ${file.name}`, false);
+            showTyping();
+            
+            fetch('/api/chat_scan', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTyping();
+                
+                if (data.success) {
+                    currentScanId = data.scan_id;
+                    const botMessageDiv = addMessage(data.bot_message, true);
+                    
+                    // Add suggestion buttons
+                    if (data.suggested_actions) {
+                        addSuggestionButtons(data.suggested_actions, botMessageDiv);
+                    }
+                } else {
+                    addMessage(data.bot_message || "Sorry, I couldn't process that image. Please try again! 😅", true);
+                }
+            })
+            .catch(error => {
+                hideTyping();
+                addMessage("Sorry, I had trouble processing that image. Please try again! 😅", true);
+            });
+            
+            // Reset file input
+            document.getElementById('imageInput').value = '';
+        }
+    </script>
+</body>
+</html>
