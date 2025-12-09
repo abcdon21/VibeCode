@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Food Assistant - FoodSaver</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="AI-powered food scanning and identification">
+    <meta name="theme-color" content="#00b894">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='food.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mobile-responsive.css') }}">
     <style>
         :root {
             --primary-green: #00b894;
@@ -543,6 +552,51 @@
             // Reset file input
             document.getElementById('imageInput').value = '';
         }
+
+        // Mobile-specific improvements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle viewport changes on mobile (address bar hide/show)
+            function handleViewportChange() {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            
+            handleViewportChange();
+            window.addEventListener('resize', handleViewportChange);
+            window.addEventListener('orientationchange', function() {
+                setTimeout(handleViewportChange, 100);
+            });
+
+            // Prevent zoom on input focus (iOS)
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    if (window.innerWidth < 768) {
+                        document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (window.innerWidth < 768) {
+                        document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0');
+                    }
+                });
+            });
+
+            // Smooth scroll to bottom on new messages (mobile)
+            function smoothScrollToBottom() {
+                const messagesContainer = document.getElementById('chatMessages');
+                messagesContainer.scrollTo({
+                    top: messagesContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Override the scrollToBottom function for mobile
+            if (window.innerWidth < 768) {
+                window.scrollToBottom = smoothScrollToBottom;
+            }
+        });
     </script>
 </body>
 </html>

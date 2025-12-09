@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodSaver - Dashboard</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Your personal food inventory dashboard">
+    <meta name="theme-color" content="#00b894">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='food.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mobile-responsive.css') }}">
     <style>
         :root {
             --primary: #4CAF50;
@@ -1522,7 +1531,10 @@
                 </div>
                 <div class="logo-text">FoodSaver</div>
             </div>
-            <nav class="nav-menu">
+            <button class="mobile-nav-toggle" onclick="toggleMobileNav()" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-menu" id="navMenu">
                 <a href="{{ url_for('home') if url_for else '/' }}" class="nav-link">
                     <i class="fas fa-home"></i> Home
                 </a>
@@ -2411,6 +2423,44 @@
         });
 
         // Enhanced features for modern AI-powered food management
+
+        // Mobile Navigation Toggle
+        function toggleMobileNav() {
+            const navMenu = document.getElementById('navMenu');
+            const toggleBtn = document.querySelector('.mobile-nav-toggle i');
+            
+            if (navMenu.classList.contains('mobile-show')) {
+                navMenu.classList.remove('mobile-show');
+                navMenu.classList.add('mobile-hidden');
+                toggleBtn.classList.remove('fa-times');
+                toggleBtn.classList.add('fa-bars');
+            } else {
+                navMenu.classList.remove('mobile-hidden');
+                navMenu.classList.add('mobile-show');
+                toggleBtn.classList.remove('fa-bars');
+                toggleBtn.classList.add('fa-times');
+            }
+        }
+
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const toggleBtn = document.querySelector('.mobile-nav-toggle');
+            
+            if (!navMenu.contains(event.target) && !toggleBtn.contains(event.target)) {
+                if (navMenu.classList.contains('mobile-show')) {
+                    toggleMobileNav();
+                }
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const navMenu = document.getElementById('navMenu');
+            if (window.innerWidth > 767) {
+                navMenu.classList.remove('mobile-show', 'mobile-hidden');
+            }
+        });
     </script>
 
 

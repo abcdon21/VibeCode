@@ -1,0 +1,444 @@
+/* Mobile-First Responsive CSS for FoodSaver */
+
+/* Mobile Base Styles (320px and up) */
+@media (max-width: 767px) {
+    /* Global Mobile Fixes */
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
+    }
+    
+    /* Container adjustments */
+    .container {
+        max-width: 100%;
+        padding: 10px 15px;
+        margin-top: 80px !important; /* Adjust for fixed header */
+    }
+    
+    /* Header Mobile */
+    .main-header {
+        padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+    
+    .header-container {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .header-logo {
+        font-size: 18px;
+    }
+    
+    .nav-menu {
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .nav-link {
+        padding: 8px 12px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+        border-radius: 6px;
+        margin: 2px 0;
+    }
+    
+    /* Dashboard Mobile */
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .stat-card {
+        min-height: auto !important;
+        padding: 15px !important;
+    }
+    
+    .food-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .food-item {
+        padding: 15px !important;
+        margin: 10px 0 !important;
+    }
+    
+    .food-item-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    
+    .food-details {
+        width: 100% !important;
+    }
+    
+    .food-actions {
+        width: 100% !important;
+        justify-content: center !important;
+        margin-top: 10px !important;
+    }
+    
+    /* Chat Interface Mobile */
+    .chat-container {
+        height: calc(100vh - 40px) !important;
+        margin: 20px 10px !important;
+        border-radius: 15px !important;
+    }
+    
+    .chat-header {
+        padding: 15px !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .chat-title h1 {
+        font-size: 20px !important;
+    }
+    
+    .chat-messages {
+        padding: 15px !important;
+        gap: 10px !important;
+    }
+    
+    .message {
+        max-width: 85% !important;
+        padding: 12px 15px !important;
+        font-size: 14px !important;
+    }
+    
+    .chat-input-container {
+        padding: 15px !important;
+        gap: 10px !important;
+        flex-direction: column !important;
+    }
+    
+    .image-preview {
+        max-width: 100% !important;
+        max-height: 200px !important;
+    }
+    
+    .chat-controls {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .chat-input {
+        width: 100% !important;
+        min-height: 40px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    .send-btn, .upload-btn {
+        width: 100% !important;
+        padding: 12px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Forms Mobile */
+    .form-container {
+        max-width: 100% !important;
+        margin: 20px 10px !important;
+        padding: 20px 15px !important;
+    }
+    
+    .form-group {
+        margin-bottom: 15px !important;
+    }
+    
+    .form-input {
+        width: 100% !important;
+        padding: 12px 15px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        border-radius: 8px !important;
+    }
+    
+    .btn {
+        width: 100% !important;
+        padding: 12px !important;
+        font-size: 16px !important;
+        margin: 5px 0 !important;
+    }
+    
+    /* Tables Mobile */
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    table {
+        min-width: 600px !important;
+        font-size: 14px !important;
+    }
+    
+    /* Cards Mobile */
+    .card {
+        margin: 10px 0 !important;
+        padding: 15px !important;
+        border-radius: 10px !important;
+    }
+    
+    .card-header {
+        font-size: 18px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    /* Buttons Mobile */
+    .button-group {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .btn-small {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+    
+    /* Modal Mobile */
+    .modal {
+        padding: 10px !important;
+    }
+    
+    .modal-content {
+        width: calc(100% - 20px) !important;
+        max-height: calc(100vh - 40px) !important;
+        margin: 10px !important;
+        border-radius: 10px !important;
+    }
+    
+    /* Profile Mobile */
+    .profile-container {
+        padding: 15px !important;
+    }
+    
+    .profile-header {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 15px !important;
+    }
+    
+    .profile-avatar {
+        width: 80px !important;
+        height: 80px !important;
+    }
+    
+    /* Image Upload Mobile */
+    .file-upload-area {
+        padding: 30px 15px !important;
+        font-size: 14px !important;
+    }
+    
+    .file-upload-text {
+        font-size: 14px !important;
+    }
+    
+    /* Navigation Mobile */
+    .mobile-nav-toggle {
+        display: block !important;
+        background: none;
+        border: none;
+        color: var(--primary-green, #00b894);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 8px;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1001;
+    }
+    
+    .nav-menu.mobile-hidden {
+        display: none !important;
+    }
+    
+    .nav-menu.mobile-show {
+        display: flex !important;
+    }
+    
+    /* Text sizes */
+    h1 { font-size: 24px !important; }
+    h2 { font-size: 20px !important; }
+    h3 { font-size: 18px !important; }
+    h4 { font-size: 16px !important; }
+    p { font-size: 14px !important; }
+    
+    /* Touch targets */
+    .touch-target {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+    
+    /* Spacing adjustments */
+    .section-padding {
+        padding: 30px 15px !important;
+    }
+    
+    .margin-bottom {
+        margin-bottom: 20px !important;
+    }
+}
+
+/* Desktop and Tablet Styles (768px and up) */
+@media (min-width: 768px) {
+    .mobile-nav-toggle {
+        display: none !important;
+    }
+    
+    .nav-menu {
+        display: flex !important;
+        flex-direction: row !important;
+    }
+}
+
+/* Tablet Styles (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .container {
+        max-width: 100%;
+        padding: 20px 30px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .food-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .nav-menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .chat-container {
+        max-width: 90%;
+        height: 85vh;
+    }
+    
+    .message {
+        max-width: 75%;
+    }
+}
+
+/* Large Mobile/Small Tablet (480px to 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+    .chat-input-container {
+        flex-direction: row !important;
+    }
+    
+    .chat-input {
+        width: auto !important;
+        flex: 1 !important;
+    }
+    
+    .send-btn, .upload-btn {
+        width: auto !important;
+        min-width: 80px !important;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Ultra Small Mobile (up to 374px) */
+@media (max-width: 374px) {
+    .container {
+        padding: 5px 10px !important;
+    }
+    
+    .chat-container {
+        margin: 10px 5px !important;
+        border-radius: 10px !important;
+    }
+    
+    .form-container {
+        margin: 10px 5px !important;
+        padding: 15px 10px !important;
+    }
+    
+    .chat-header {
+        padding: 10px !important;
+    }
+    
+    .chat-title h1 {
+        font-size: 18px !important;
+    }
+    
+    .message {
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* iOS Safari fixes */
+@supports (-webkit-touch-callout: none) {
+    .chat-input, .form-input {
+        font-size: 16px !important; /* Prevents zoom */
+    }
+    
+    .chat-container {
+        height: calc(100vh - 40px - env(safe-area-inset-bottom)) !important;
+    }
+}
+
+/* Android Chrome fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"] {
+        font-size: 16px !important;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .image-preview {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+    .chat-container {
+        height: calc(100vh - 20px) !important;
+    }
+    
+    .chat-header {
+        padding: 10px 15px !important;
+    }
+    
+    .main-header {
+        position: relative !important;
+    }
+    
+    .container {
+        margin-top: 0 !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    .chat-input-container, .nav-menu, .back-btn {
+        display: none !important;
+    }
+    
+    .chat-container {
+        height: auto !important;
+        box-shadow: none !important;
+    }
+}
